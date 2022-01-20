@@ -6,7 +6,7 @@ public class InputManager : MonoBehaviour
     public Joystick floatingJoystick;
 
     public delegate void MouseCallback();
-    public event MouseCallback OnMouseHold, OnMouseDown, OnMouseUp;
+    public event MouseCallback  OnMouseDown, OnMouseUp;
     public delegate void MouseDragCallback(float X);
     public event MouseDragCallback OnMouseDrag;
 
@@ -53,7 +53,6 @@ public class InputManager : MonoBehaviour
         }
         else if (Input.GetMouseButton(0) && GameManager.Instance.currentGameState == GameManager.GameState.GamePlay && PlayerManager.Instance.currentPlayerStates == PlayerStates.Running)
         {
-            OnMouseHold?.Invoke();
             MouseCurrentPosition = orthographicCamera.ScreenToWorldPoint(Input.mousePosition);
             MouseCurrentPosition.y = PlayerManager.Instance.currentPlayer.transform.position.y;
 
@@ -83,9 +82,9 @@ public class InputManager : MonoBehaviour
 
         if (Input.GetMouseButton(0) && GameManager.Instance.currentGameState == GameManager.GameState.GamePlay && PlayerManager.Instance.currentPlayerStates == PlayerStates.Running)
         {
-            OnMouseHold?.Invoke();
-            if (floatingJoystick.Horizontal > 0.1f || floatingJoystick.Horizontal < -0.1f || floatingJoystick.Vertical > 0.1f || floatingJoystick.Vertical < -0.1f)
+            if (floatingJoystick.Horizontal > 0.1f || floatingJoystick.Horizontal < -0.1f)
             {
+                Debug.Log("W");
                 OnMouseDrag?.Invoke(floatingJoystick.Horizontal);
             }
         }
