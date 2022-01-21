@@ -40,7 +40,9 @@ public class CameraManager : MonoBehaviour
     private void Start()
     {
         //offset = primaryCamera.transform.position - target.transform.position;
-        mainCinemachineCamera = GetComponent<CinemachineVirtualCamera>();
+
+        AssignCarToCamera(PlayerManager.Instance.currentCar.transform);
+
     }
     public void SwitchCamera()
     {
@@ -58,6 +60,17 @@ public class CameraManager : MonoBehaviour
             speedParticleSystem.Stop();
         }
         
+    }
+    private void AssignCarToCamera(Transform car)
+    {
+        mainCinemachineCamera.Follow = PlayerManager.Instance.currentCar.transform;
+        mainCinemachineCamera.LookAt = PlayerManager.Instance.currentCar.transform;
+
+        for (int i = 0; i < rampVirtualCamera.Length; i++)
+        {
+            rampVirtualCamera[i].Follow = car;
+            rampVirtualCamera[i].LookAt = car;
+        }
     }
     public void FollowPlayer()
     {

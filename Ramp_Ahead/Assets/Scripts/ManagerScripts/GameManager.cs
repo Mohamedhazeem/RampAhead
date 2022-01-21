@@ -9,7 +9,6 @@ public class GameManager : MonoBehaviour
      {
         Menu,
         GamePlay,
-        Climax,
         Win,
         Lose
      }
@@ -53,9 +52,6 @@ public class GameManager : MonoBehaviour
 
             case GameState.Lose:
                 UIManager.instance.RestartSceneButtonSetActive();
-                break;
-
-            case GameState.Climax:
                 break;
 
             default:

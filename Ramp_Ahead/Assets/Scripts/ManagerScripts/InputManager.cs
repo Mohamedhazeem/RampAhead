@@ -37,30 +37,30 @@ public class InputManager : MonoBehaviour
     }
     private void HoldAndDrag()
     {
-        if (GameManager.Instance.currentGameState == GameManager.GameState.Menu && UIManager.instance.currentMenuState == UIManager.MenuState.BeforeStart && PlayerManager.Instance.currentPlayerStates == PlayerStates.Idle && Input.GetMouseButtonDown(0))
+        if (GameManager.Instance.currentGameState == GameManager.GameState.Menu && UIManager.instance.currentMenuState == UIManager.MenuState.Start && PlayerManager.Instance.currentCarStates == CarStates.Idle && Input.GetMouseButtonDown(0))
         {
             GameManager.Instance.SwitchGameStates();
             UIManager.instance.SwitchUiState();
         }
 
-        if (GameManager.Instance.currentGameState == GameManager.GameState.GamePlay && PlayerManager.Instance.currentPlayerStates == PlayerStates.Idle && Input.GetMouseButtonDown(0))
+        if (GameManager.Instance.currentGameState == GameManager.GameState.GamePlay && PlayerManager.Instance.currentCarStates == CarStates.Idle && Input.GetMouseButtonDown(0))
         {
             PlayerManager.Instance.SwitchPlayerStates();
             OnMouseDown?.Invoke();
             MouseStartPosition = orthographicCamera.ScreenToWorldPoint(Input.mousePosition);
-            MouseStartPosition.y = PlayerManager.Instance.currentPlayer.transform.position.y;
+            MouseStartPosition.y = PlayerManager.Instance.currentCar.transform.position.y;
 
         }
-        else if (Input.GetMouseButton(0) && GameManager.Instance.currentGameState == GameManager.GameState.GamePlay && PlayerManager.Instance.currentPlayerStates == PlayerStates.Running)
+        else if (Input.GetMouseButton(0) && GameManager.Instance.currentGameState == GameManager.GameState.GamePlay && PlayerManager.Instance.currentCarStates == CarStates.Running)
         {
             MouseCurrentPosition = orthographicCamera.ScreenToWorldPoint(Input.mousePosition);
-            MouseCurrentPosition.y = PlayerManager.Instance.currentPlayer.transform.position.y;
+            MouseCurrentPosition.y = PlayerManager.Instance.currentCar.transform.position.y;
 
             var difference = MouseCurrentPosition - MouseStartPosition;
             OnMouseDrag(difference.x);
            
         }
-        else if (Input.GetMouseButtonUp(0) && GameManager.Instance.currentGameState == GameManager.GameState.GamePlay && PlayerManager.Instance.currentPlayerStates == PlayerStates.Running)
+        else if (Input.GetMouseButtonUp(0) && GameManager.Instance.currentGameState == GameManager.GameState.GamePlay && PlayerManager.Instance.currentCarStates == CarStates.Running)
         {
             
             PlayerManager.Instance.SwitchPlayerStates();
@@ -69,26 +69,26 @@ public class InputManager : MonoBehaviour
     }
     private void Joystick()
     {
-        if (GameManager.Instance.currentGameState == GameManager.GameState.Menu && PlayerManager.Instance.currentPlayerStates == PlayerStates.Idle && Input.GetMouseButtonDown(0))
+        if (GameManager.Instance.currentGameState == GameManager.GameState.Menu && PlayerManager.Instance.currentCarStates == CarStates.Idle && Input.GetMouseButtonDown(0))
         {
             GameManager.Instance.SwitchGameStates();
+            UIManager.instance.SwitchUiState();
 
         }
-        if (GameManager.Instance.currentGameState == GameManager.GameState.GamePlay && PlayerManager.Instance.currentPlayerStates == PlayerStates.Idle && Input.GetMouseButtonDown(0))
+        if (GameManager.Instance.currentGameState == GameManager.GameState.GamePlay && PlayerManager.Instance.currentCarStates == CarStates.Idle && Input.GetMouseButtonDown(0))
         {
-            OnMouseDown?.Invoke();
             PlayerManager.Instance.SwitchPlayerStates();
         }
 
-        if (Input.GetMouseButton(0) && GameManager.Instance.currentGameState == GameManager.GameState.GamePlay && PlayerManager.Instance.currentPlayerStates == PlayerStates.Running)
+        if (Input.GetMouseButton(0) && GameManager.Instance.currentGameState == GameManager.GameState.GamePlay && PlayerManager.Instance.currentCarStates == CarStates.Running)
         {
+            OnMouseDown?.Invoke();
             if (floatingJoystick.Horizontal > 0.1f || floatingJoystick.Horizontal < -0.1f)
             {
-                Debug.Log("W");
                 OnMouseDrag?.Invoke(floatingJoystick.Horizontal);
             }
         }
-        if (Input.GetMouseButtonUp(0) && GameManager.Instance.currentGameState == GameManager.GameState.GamePlay && PlayerManager.Instance.currentPlayerStates == PlayerStates.Running)
+        if (Input.GetMouseButtonUp(0) && GameManager.Instance.currentGameState == GameManager.GameState.GamePlay && PlayerManager.Instance.currentCarStates == CarStates.Running)
         {
             OnMouseUp?.Invoke();
             PlayerManager.Instance.SwitchPlayerStates();

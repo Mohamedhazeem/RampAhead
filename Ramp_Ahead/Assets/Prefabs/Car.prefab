@@ -124,6 +124,7 @@ GameObject:
   - component: {fileID: 145381379170094682}
   - component: {fileID: 1688310324993611395}
   - component: {fileID: 6478430552713761241}
+  - component: {fileID: 6873929876654051066}
   m_Layer: 8
   m_Name: Car Body
   m_TagString: Player
@@ -203,6 +204,20 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
+--- !u!64 &6873929876654051066
+MeshCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1275298341672992935}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 4
+  m_Convex: 1
+  m_CookingOptions: 30
+  m_Mesh: {fileID: -8545447256379345787, guid: fd7c5c7d96cae6a45a105a4ac81bea04, type: 3}
 --- !u!1 &2719783027323076585
 GameObject:
   m_ObjectHideFlags: 0
@@ -455,7 +470,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4877983424814940229}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0.74365, z: -3.132}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 0.8335, y: 0.8335, z: 0.8335}
   m_Children:
   - {fileID: 145381379170094682}
@@ -476,7 +491,7 @@ Rigidbody:
   m_UseGravity: 1
   m_IsKinematic: 0
   m_Interpolate: 0
-  m_Constraints: 96
+  m_Constraints: 112
   m_CollisionDetection: 2
 --- !u!114 &4877983424814940225
 MonoBehaviour:
@@ -490,18 +505,24 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d0bfc0c716360fa44b9f52fa1d1ae975, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  playerRigidBody: {fileID: 4877983424814940230}
+  playerRigidBody: {fileID: 0}
   carTransform: {fileID: 145381379170094682}
   rotateDuration: 1
-  moveSpeed: 15
+  moveSpeed: 5
+  speedPaticleEffectValue: 10
   xMinimum: -1.3
   xMaximum: 1.3
+  xMinimumOnRank: -1.4
+  xMaximumOnRank: 1.4
   xMoveSpeed: 5
-  gravityValueForRamp: 0
-  gravityValueForMiniRamp: 0
+  gravityValueForRamp: 10
+  multipliyerForRamp: 10
+  gravityValueForMiniRamp: 100
+  multipliyerForMiniRamp: 50
   isTriggered: 0
   isGrounded: 0
   isRamp: 0
+  isMiniRampTrigger: 0
   isMiniRamp: 0
   isSideMove: 0
 --- !u!1 &5006688450202624325

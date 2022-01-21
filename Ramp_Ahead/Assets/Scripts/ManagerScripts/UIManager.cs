@@ -7,19 +7,12 @@ public class UIManager : MonoBehaviour
     public static UIManager instance;
     public enum MenuState
     {
-        BeforeStart,
-        Started
+        Start,
+        GamePlay
     }
     internal MenuState currentMenuState;
 
     public TMP_Text speed; 
-
-    //[Header("Hold And Drag GameObject")]
-    //[SerializeField]private GameObject holdAndDragText;
-
-    //[Header("Restart and Next Button GameObject")]
-    //[SerializeField] private GameObject restartButton;
-    //[SerializeField] private GameObject nextButton;
 
     private void Awake()
     {
@@ -27,7 +20,8 @@ public class UIManager : MonoBehaviour
     }
     private void Start()
     {
-        currentMenuState = MenuState.BeforeStart;
+        currentMenuState = MenuState.Start;
+        speed.gameObject.SetActive(false);
         //holdAndDragText.SetActive(true);
     }
     private void AssignInstance()
@@ -46,13 +40,17 @@ public class UIManager : MonoBehaviour
     {
         switch (currentMenuState)
         {
-            case MenuState.BeforeStart:
-                currentMenuState = MenuState.Started;
+            case MenuState.Start:
+                currentMenuState = MenuState.GamePlay;
+                speed.gameObject.SetActive(true);
+
+                PlayerManager.Instance.CarSpeed();
                 //holdAndDragText.SetActive(false);
                 break;
 
-            case MenuState.Started:
-                currentMenuState = MenuState.BeforeStart;
+            case MenuState.GamePlay:
+                currentMenuState = MenuState.Start;
+                
                 //holdAndDragText.SetActive(true);
                 break;
 

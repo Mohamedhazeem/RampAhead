@@ -6,25 +6,17 @@ public class PlayerManager : MonoBehaviour
 { 
     public static PlayerManager Instance;
 
-    public delegate void ClimaxIdleAnimationCallback();
-    public event ClimaxIdleAnimationCallback OnClimaxIdleAnimation;
-
-    public delegate void ClimaxWinAnimationCallback();
-    public event ClimaxWinAnimationCallback OnClimaxWinAnimation;
-
     [Header("Player Spawn Point")]
-    public Transform playerSpawnPoint;
+    public Transform carSpawnPoint;
 
     [Header("Players")]
     [SerializeField]
-    private GameObject playerPrefab;
-    public GameObject currentPlayer;
-    public Material playerMaterial;
+    private GameObject carPrefab;
+    public GameObject currentCar;
 
-    public PlayerStates currentPlayerStates;
+    public CarStates currentCarStates;
 
-   
-    public int Count;
+    private Car car;
     private void Awake()
     {
         AssignInstance();
@@ -43,60 +35,45 @@ public class PlayerManager : MonoBehaviour
     }
     private void Start()
     {
-        if (playerSpawnPoint != null)
+        if (carSpawnPoint != null)
         {
-            currentPlayer = Instantiate(playerPrefab, playerSpawnPoint.position, Quaternion.identity);
+            currentCar = Instantiate(carPrefab, carSpawnPoint.position, Quaternion.identity);
         }
-
-        currentPlayerStates = PlayerStates.Idle;
+        car = currentCar.GetComponent<Car>();
+        currentCarStates = CarStates.Idle;
     }
   
     public void SwitchPlayerStates()
     {
-        switch (currentPlayerStates)
+        switch (currentCarStates)
         {
-            case PlayerStates.Idle:
-                currentPlayerStates = PlayerStates.Running;
+            case CarStates.Idle:
+                currentCarStates = CarStates.Running;
                 break;
 
-            case PlayerStates.Running:
-                    currentPlayerStates = PlayerStates.Idle;                
+            case CarStates.Running:
                 break;
 
-            case PlayerStates.Attack:
-
+            case CarStates.Jump:
                 break;
 
-            case PlayerStates.Win:
-                OnClimaxWinAnimation?.Invoke();
-                break;
-
-            case PlayerStates.Die:
-                break;
-
-            case PlayerStates.ClimaxIdle:
-                StartCoroutine(ClimaxIdleToRun());
-                OnClimaxIdleAnimation.Invoke();
-
+            case CarStates.Fall:
+                currentCarStates = CarStates.Idle;
                 break;
 
             default:
                 break;
         }
     }
-    IEnumerator ClimaxIdleToRun()
+    public void CarSpeed()
     {
-        yield return new WaitForSeconds(1f);
-        currentPlayerStates = PlayerStates.Attack;
+        StartCoroutine(car.ChangeSpeed(false));
     }
-    
 }
-public enum PlayerStates
+public enum CarStates
 {
     Idle,
     Running,
-    Attack,
-    ClimaxIdle,
-    Win,
-    Die
+    Jump,
+    Fall,
 }
