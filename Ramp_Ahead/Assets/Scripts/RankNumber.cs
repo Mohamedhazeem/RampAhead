@@ -9,7 +9,6 @@ public class RankNumber : MonoBehaviour
 
     public void AssignRankNumber(int number)
     {
-        Debug.Log(number);
         rankNumber = number;
     }
 
