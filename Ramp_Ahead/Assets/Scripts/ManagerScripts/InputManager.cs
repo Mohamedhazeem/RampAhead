@@ -10,6 +10,7 @@ public class InputManager : MonoBehaviour
     public delegate void MouseDragCallback(float X);
     public event MouseDragCallback OnMouseDrag;
 
+
     [Header("Ortho Graphic Camera")]
     [SerializeField] private Camera orthographicCamera;
 
@@ -77,6 +78,8 @@ public class InputManager : MonoBehaviour
         }
         if (GameManager.Instance.currentGameState == GameManager.GameState.GamePlay && PlayerManager.Instance.currentCarStates == CarStates.Idle && Input.GetMouseButtonDown(0))
         {
+            OnMouseDown?.Invoke();
+            PlayerManager.Instance.currentCarStates = CarStates.Running;
             PlayerManager.Instance.SwitchPlayerStates();
         }
 

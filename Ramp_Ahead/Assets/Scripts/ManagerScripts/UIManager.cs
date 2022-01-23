@@ -43,12 +43,11 @@ public class UIManager : MonoBehaviour
             case MenuState.Start:
                 currentMenuState = MenuState.GamePlay;
                 speed.gameObject.SetActive(true);
-
-                PlayerManager.Instance.CarSpeed();
                 //holdAndDragText.SetActive(false);
                 break;
 
             case MenuState.GamePlay:
+                StopAllCoroutines();
                 currentMenuState = MenuState.Start;
                 
                 //holdAndDragText.SetActive(true);

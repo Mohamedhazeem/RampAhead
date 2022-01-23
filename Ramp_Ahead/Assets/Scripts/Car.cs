@@ -31,10 +31,13 @@ public class Car : MonoBehaviour
     [SerializeField] private float  gravityValueForMiniRamp;
     [SerializeField] private float multipliyerForMiniRamp;
 
+    [Header("BOOST EFFECT SPAWN POINT")]
+    public Transform boostSpawnPointLeft;
+    public Transform boostSpawnPointRight;
+
     [Header("BOOL")]
-    public bool isTriggered = false ,isGrounded = false;
+    public bool isSpeedTriggered = false ,isGrounded = false , isObstacleTriggered = false;
     public bool isRamp = false ,isMiniRampTrigger = false, isMiniRamp = false, isSideMove = false;
-   
 
     private SpeedDown speedDown;
     private Tyre tyre;
@@ -42,13 +45,9 @@ public class Car : MonoBehaviour
 
     protected void Start()
     {
-        //InputManager.instance.OnMouseHold += Move;
         InputManager.instance.OnMouseUp += Idle;
         InputManager.instance.OnMouseDown += StartSideMove;
         InputManager.instance.OnMouseDrag += PlayerSideMoves;
-        
-
-        //capsuleCollider = GetComponent<CapsuleCollider>();
         playerRigidBody = GetComponent<Rigidbody>();
     }
   
@@ -81,6 +80,10 @@ public class Car : MonoBehaviour
     {
         isSideMove = true;
     }
+    private void Idle()
+    {
+        isSideMove = false;
+    }
     private void Move()
     {        
         if(moveSpeed > 0 && !isMiniRamp)
@@ -93,65 +96,22 @@ public class Car : MonoBehaviour
             playerRigidBody.velocity = transform.forward * moveSpeed;
         }
     }
-    public IEnumerator ChangeSpeed(bool hasJumped)
-    {
-        if (!hasJumped)
-        {
-            while (true)
-            {
-                if (currentSpeed < moveSpeed)
-                {
-                    currentSpeed++;
-                    UIManager.instance.speed.text = ((int)currentSpeed).ToString();
-                }
-                else if (currentSpeed > moveSpeed )
-                {
-                    currentSpeed--;
-                    if(currentSpeed < 0)
-                    {
-                        currentSpeed = 0;                        
-                    }
-                    UIManager.instance.speed.text = ((int)currentSpeed).ToString();
-                }
-                yield return new WaitForSeconds(0.05f);
-            }
-        }
-        else
-        {
-            while (true)
-            {
-                if (currentSpeed > 0)
-                {
-                    currentSpeed--;
-                    UIManager.instance.speed.text = ((int)currentSpeed).ToString();
-                }
-                else if(currentSpeed < 0)
-                {
-                    currentSpeed = 0;
-                    UIManager.instance.speed.text = ((int)currentSpeed).ToString();
-                }
-                yield return new WaitForSeconds(0.05f);
-            }
-        }
-        
-    }
     private void PlayerSideMoves(float x)
-    {       
+    {
         if (!isRamp && isSideMove == true && !isMiniRamp && !isMiniRampTrigger)
         {
-            Debug.Log(moveSpeed);
             var position = transform.position;
-            if (moveSpeed > 0 )
-            {                
+            if (moveSpeed > 0)
+            {
                 if (position.x > xMinimum && x < 0)
                 {
-             
+
                     playerRigidBody.velocity = new Vector3(Vector3.right.x * x * xMoveSpeed, 0, moveSpeed);
                 }
                 else if (position.x < xMaximum && x > 0)
-                {                    
+                {
                     playerRigidBody.velocity = new Vector3(Vector3.right.x * x * xMoveSpeed, 0, moveSpeed);
-                }                
+                }
                 else
                 {
                     playerRigidBody.velocity = Vector3.forward * moveSpeed;
@@ -168,6 +128,8 @@ public class Car : MonoBehaviour
             transform.position = position;
         }
     }
+    
+   
     private void Jump()
     {
         CameraManager.instance.SwitchCamera();
@@ -175,7 +137,6 @@ public class Car : MonoBehaviour
     }
     private void Fall()
     {
-        //playerRigidBody.velocity = Vector3.down * gravityValue;
         if (isRamp)
         {
             playerRigidBody.AddForce(Vector3.down * gravityValueForRamp * multipliyerForRamp);
@@ -186,20 +147,7 @@ public class Car : MonoBehaviour
         }
         
 
-    }
-    private void Idle()
-    {
-        isSideMove = false;
-    }
-    private void InitialRotation()
-    {
-        transform.DORotate(Vector3.zero, 0.5f);
-        carTransform.DORotate(Vector3.zero,0.5f);
-    }
-    private void OilRotate()
-    {
-        carTransform.DORotate(Vector3.up * 360,rotateDuration,RotateMode.FastBeyond360);
-    }
+    }      
     private void Flip()
     {
 
@@ -243,12 +191,66 @@ public class Car : MonoBehaviour
             default:
                 break;
         }
+    }   
+    private void InitialRotation()
+    {
+        transform.DORotate(Vector3.zero, 0.5f);
+        carTransform.DORotate(Vector3.zero, 0.5f);
+    }
+    private void OilRotate()
+    {
+        carTransform.DORotate(Vector3.up * 360, rotateDuration, RotateMode.FastBeyond360);
+    }
+    public IEnumerator ChangeSpeed(bool hasJumped)
+    {
+        if (!hasJumped)
+        {
+            while (true)
+            {
+                if (currentSpeed < moveSpeed)
+                {
+                    currentSpeed++;
+                    UIManager.instance.speed.text = ((int)currentSpeed).ToString();
+                    Debug.Log("NOT");
+                }
+                else if (currentSpeed > moveSpeed)
+                {
+                    currentSpeed--;
+                    if (currentSpeed < 0)
+                    {
+                        currentSpeed = 0;
+                    }
+                    UIManager.instance.speed.text = ((int)currentSpeed).ToString();
+                }
+                yield return new WaitForSeconds(0.05f);
+            }
+        }
+        else
+        {
+            while (true)
+            {
+                if (currentSpeed > 0)
+                {
+                    currentSpeed--;
+                    Debug.Log("Working");
+                    UIManager.instance.speed.text = ((int)currentSpeed).ToString();
+                }
+                else if (currentSpeed < 0)
+                {
+                    currentSpeed = 0;
+                    UIManager.instance.speed.text = ((int)currentSpeed).ToString();
+                }
+                yield return new WaitForSeconds(0.05f);
+            }
+        }
+
     }
     public void CheckSpeed()
     {
         if (moveSpeed <= 0)
         {
             GameManager.Instance.currentGameState = GameManager.GameState.Lose;
+            playerRigidBody.velocity = Vector3.zero;
         }
     }
     private void CheckSpeedEffect()
@@ -264,19 +266,18 @@ public class Car : MonoBehaviour
     }
     private void OnTriggerEnter(Collider other)
     {
-        if (other.CompareTag("Speed") && !isTriggered)
+        if (other.CompareTag("Speed") && !isSpeedTriggered && PlayerManager.Instance.currentCarStates == CarStates.Running)
         {
             moveSpeed = other.GetComponent<SpeedPost>().CarSpeed(moveSpeed);
             CheckSpeedEffect();
             other.gameObject.SetActive(false);
-            isTriggered = true;
+            isSpeedTriggered = true;
             Invoke("Triggered", 0.5f);
         }
 
         if (other.CompareTag("Ramp"))
         {
-            isRamp = true;
-            playerRigidBody.constraints = RigidbodyConstraints.FreezeRotationY;            
+            isRamp = true;         
             StopAllCoroutines();
             Jump();
             PlayerManager.Instance.currentCarStates = CarStates.Jump;
@@ -289,23 +290,38 @@ public class Car : MonoBehaviour
             PlayerManager.Instance.currentCarStates = CarStates.Jump;
         }
 
-        if (other.CompareTag("Tyre"))
+        if (other.CompareTag("Tyre") && !isObstacleTriggered)
         {
             tyre = other.GetComponent<Tyre>();
             tyre.DisableTyre();
             moveSpeed -= tyre.speed;
             CheckSpeed();
             CheckSpeedEffect();
+            isObstacleTriggered = true;
+            Invoke("ObstacleTriggered", 1f);
         }
-        if(other.CompareTag("Oil"))
+        if(other.CompareTag("Oil") && !isObstacleTriggered)
         {
             speedDown = other.GetComponent<SpeedDown>();
             moveSpeed -= speedDown.speed;
             OilRotate();
             CheckSpeed();
             CheckSpeedEffect();
+            isObstacleTriggered = true;
+            Invoke("ObstacleTriggered", 1f);
+        }        
+    }
+    private void OnTriggerExit(Collider other)
+    {
+        if (other.CompareTag("Ramp"))
+        {
+            isRamp = true;
         }
-        
+        if (other.CompareTag("MiniRamp"))
+        {
+            playerRigidBody.constraints = RigidbodyConstraints.None;
+            Flip();
+        }
     }
     private void OnCollisionEnter(Collision collision)
     {
@@ -313,13 +329,14 @@ public class Car : MonoBehaviour
         {
             isRamp = true;
             playerRigidBody.constraints = RigidbodyConstraints.None;
-            StartCoroutine(ChangeSpeed(true));
+
             StartCoroutine(ResetRigidBody(3f));
             isGrounded = true;
-
             GameManager.Instance.currentGameState = GameManager.GameState.Win;
             PlayerManager.Instance.currentCarStates = CarStates.Fall;
+            PlayerManager.Instance.SwitchPlayerStates();            
         }
+        
         else if (collision.collider.CompareTag("Road"))
         {
             isRamp = isMiniRampTrigger = false;
@@ -332,7 +349,7 @@ public class Car : MonoBehaviour
         }
         else if (collision.collider.CompareTag("Ramp"))
         {
-         
+            isRamp = true;
             playerRigidBody.constraints = RigidbodyConstraints.None;
         }
         else if (collision.collider.CompareTag("MiniRamp"))
@@ -356,28 +373,25 @@ public class Car : MonoBehaviour
             moveSpeed -= speedDown.speed;
             CheckSpeed();
             CheckSpeedEffect();
-            StartCoroutine(speedDown.DisableGameObject(1.5f));
+            StartCoroutine(speedDown.DisableGameObject(0.5f));
         }
     }
-    private void OnTriggerExit(Collider other)
+    private void OnCollisionStay(Collision collision)
     {
-        if (other.CompareTag("Ramp"))
+        if (collision.collider.CompareTag("Ground"))
         {
-            isRamp = true;
-        }
-        if (other.CompareTag("MiniRamp"))
-        {
-            playerRigidBody.constraints = RigidbodyConstraints.None;
-            Flip();
+            PlayerManager.Instance.rankMaterial = collision.collider.GetComponent<Renderer>().material;            
         }
     }
+    
     IEnumerator ResetRigidBody(float seconds)
     {
         yield return new WaitForSeconds(seconds);
         playerRigidBody.velocity = Vector3.zero;
         playerRigidBody.angularVelocity = Vector3.zero;
-        playerRigidBody.isKinematic = true;
+        //playerRigidBody.isKinematic = true;
         isGrounded = false;
+        PlayerManager.Instance.RankPlatformBlink();
     }
     IEnumerator PlayerRigidbodyConstraints(float seconds)
     {
@@ -387,7 +401,11 @@ public class Car : MonoBehaviour
     }
     private void Triggered()
     {
-        isTriggered = false;
+        isSpeedTriggered = false;
+    }
+    private void ObstacleTriggered()
+    {
+        isObstacleTriggered = false;
     }
    
 }
