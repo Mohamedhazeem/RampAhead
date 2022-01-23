@@ -66,7 +66,6 @@ public class PlayerManager : MonoBehaviour
                 //goto case CarStates.Running;
                 break;
             case CarStates.Running:
-                Debug.Log("C");
                 StopAllCoroutines();
                 SmokeTrail(true);
                 CarSpeed(false);

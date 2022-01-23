@@ -211,7 +211,6 @@ public class Car : MonoBehaviour
                 {
                     currentSpeed++;
                     UIManager.instance.speed.text = ((int)currentSpeed).ToString();
-                    Debug.Log("NOT");
                 }
                 else if (currentSpeed > moveSpeed)
                 {
@@ -232,7 +231,6 @@ public class Car : MonoBehaviour
                 if (currentSpeed > 0)
                 {
                     currentSpeed--;
-                    Debug.Log("Working");
                     UIManager.instance.speed.text = ((int)currentSpeed).ToString();
                 }
                 else if (currentSpeed < 0)
