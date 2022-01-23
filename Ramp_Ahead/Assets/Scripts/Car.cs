@@ -380,18 +380,19 @@ public class Car : MonoBehaviour
     {
         if (collision.collider.CompareTag("Ground"))
         {
-            PlayerManager.Instance.rankMaterial = collision.collider.GetComponent<Renderer>().material;            
+            PlayerManager.Instance.rankMaterial = collision.collider.GetComponent<Renderer>().material;
         }
     }
     
     IEnumerator ResetRigidBody(float seconds)
     {
         yield return new WaitForSeconds(seconds);
+        PlayerManager.Instance.RankPlatformBlink();
         playerRigidBody.velocity = Vector3.zero;
         playerRigidBody.angularVelocity = Vector3.zero;
         //playerRigidBody.isKinematic = true;
         isGrounded = false;
-        PlayerManager.Instance.RankPlatformBlink();
+       
     }
     IEnumerator PlayerRigidbodyConstraints(float seconds)
     {

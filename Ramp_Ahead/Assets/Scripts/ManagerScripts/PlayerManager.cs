@@ -56,8 +56,7 @@ public class PlayerManager : MonoBehaviour
         trailEffectRight.transform.SetParent(car.boostSpawnPointRight);
 
         currentCarStates = CarStates.Idle;
-    }
-  
+    }  
     public void SwitchPlayerStates()
     {
         switch (currentCarStates)
