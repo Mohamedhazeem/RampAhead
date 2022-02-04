@@ -1,10 +1,13 @@
 using System;
+using System.Collections;
 using UnityEngine;
 using TMPro;
+using DG.Tweening;
 using UnityEngine.UI;
 public class UIManager : MonoBehaviour
 {
     public static UIManager instance;
+
     public enum MenuState
     {
         Start,
@@ -12,7 +15,8 @@ public class UIManager : MonoBehaviour
     }
     internal MenuState currentMenuState;
 
-    public TMP_Text speed; 
+    [Header("Speed Text")]
+    public TMP_Text speed;
 
     private void Awake()
     {
@@ -57,7 +61,6 @@ public class UIManager : MonoBehaviour
                 break;
         }
     }
-
     public void NextSceneButtonSetActive()
     {
         //nextButton.SetActive(true);
